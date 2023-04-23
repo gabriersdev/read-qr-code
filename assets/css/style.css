@@ -1,0 +1,25 @@
+@import url(./frameworks/bootstrap.css);
+@import url(./frameworks/bootstrap-icons.css);
+
+@import url(./normalize.css);
+@import url(./reset.css);
+
+@import url(./elementos/no-script.css);
+@import url(./cores.css);
+@import url(./variaveis.css);
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  font-family: '', sans-serif;
+}
+
+.none{
+  display: none;
+}
+
+.block{
+  display: block;
+}
