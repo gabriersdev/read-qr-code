@@ -4,22 +4,134 @@
 @import url(./normalize.css);
 @import url(./reset.css);
 
-@import url(./elementos/no-script.css);
-@import url(./cores.css);
 @import url(./variaveis.css);
+
+@import url(./elementos/no-script.css);
+@import url(./elementos/modal.css);
 
 html{
   scroll-behavior: smooth;
 }
 
+*{
+  font-family: 'Inter', sans-serif;
+}
+
 body{
-  font-family: '', sans-serif;
+  background-color: var(--preto);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .none{
   display: none;
 }
 
-.block{
-  display: block;
+.container{
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+
+.alert-loading{
+  background-color: var(--branco-10);
+  border: 1px solid var(--branco-10);
+}
+
+.card{
+  --bs-card-bg: var(--branco-50) !important;
+}
+
+.card-header{
+  background: var(--cinza);
+  background: linear-gradient(90deg, #1E1E1E 0%, #232323 50%, #282828 100%);
+  border-color: var(--branco-20) !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn{
+  color: var(--branco-50);
+  border-color: var(--branco-20);
+}
+
+.btn.disabled{
+  color: initial;
+  color: var(--branco) !important;
+  padding-right: 0;
+  font-size: 1.25rem;
+}
+
+.btn.dashed{
+  border-style: dashed;
+  border-right: unset;
+}
+
+.card-header .btn-compartilhar-app{
+  padding-right: 0.8rem;
+}
+
+.input-group.trnsp button{
+  border-left: unset;
+}
+
+input{
+  color: var(--branco) !important;
+  border-color: var(--branco-20) !important;
+}
+
+.card-header .btn-compartilhar-app:hover,
+.card-header .btn-compartilhar-app:focus,
+input:hover,
+input:focus{
+  color: var(--branco) !important;
+  border-color: var(--branco-30) !important;
+  background-color: var(--branco-10) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.card-body{
+  background-color: var(--preto);
+}
+
+.input-group-text{
+  border-color: var(--branco-20) !important;
+  color: var(--branco) !important;
+}
+
+.card-body .btn-gerar-qr-code{
+  margin-top: 1rem;
+  width: 100%;
+  color: var(--branco);
+  background-color: var(--azul) !important;
+  border-color: var(--branco-20); 
+}
+
+.card-body .btn-gerar-qr-code:hover,
+.card-body .btn-gerar-qr-code:focus{
+  background-color: var(--azul-escuro) !important;
+}
+
+.trnsp, .trnsp:focus, .trnsp:hover, .trnsp::placeholder{
+  background-color: transparent;
+  color: var(--branco);
+}
+
+.icon.error{
+  color: var(--vermelho-solido);
+}
+
+.link-visivel{
+  color: var(--azul);
+  text-decoration: underline;
+}
+
+.custom-tooltip{
+  --bs-tooltip-bg: var(--cinza-claro) !important;
+  --bs-tooltip-color: var(--branco) !important;
+  --bs-tooltip-opacity: 1;
+  --bs-tooltip-margin: 1rem;
 }

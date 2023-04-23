@@ -1,0 +1,25 @@
+:root{
+  --preto: #000;
+  --cinza: #1E1E1E;
+  --cinza-claro: #3B3B3B;
+  --branco: #FFF;
+  --branco-05: rgb(255, 255, 255, 0.05);
+  --branco-10: rgb(255, 255, 255, 0.1);
+  --branco-20: rgb(255, 255, 255, 0.2);
+  --branco-30: rgb(255, 255, 255, 0.3);
+  --branco-40: rgb(255, 255, 255, 0.4);
+  --branco-50: rgb(255, 255, 255, 0.5);
+  --branco-60: rgb(255, 255, 255, 0.6);
+  --branco-65: rgb(255, 255, 255, 0.65);
+  --branco-70: rgb(255, 255, 255, 0.7);
+  --branco-80: rgb(255, 255, 255, 0.8);
+
+  --verde: rgb(4, 141, 4, 0.3);
+  --vermelho-solido: #FF0000;
+  --vermelho: rgb(255, 0, 0, 0.2);
+
+  --azul: #1E90FF;
+  --azul-escuro: #0D6CCC;
+
+  --bs-body-color: var(--branco);
+}

@@ -3,6 +3,8 @@ const isEmpty = (valor) => {
     return valor == undefined || valor == null || valor.length <= 0;
   }else if(Array.isArray(valor)){
     return valor.length <= 0;
+  }else if(valor == undefined){
+    throw 'Parâmetro para a função isEmpty() necessário.'
   }else{
     return valor == undefined || valor == null
   }
