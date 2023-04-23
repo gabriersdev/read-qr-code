@@ -1,7 +1,7 @@
 "use strict";
 
 (() => {
-  hljs.highlightAll();
+  // hljs.highlightAll();
 
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
