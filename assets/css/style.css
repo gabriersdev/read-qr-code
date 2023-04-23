@@ -85,7 +85,9 @@ input{
 .card-header .btn-compartilhar-app:hover,
 .card-header .btn-compartilhar-app:focus,
 input:hover,
-input:focus{
+input:focus,
+[data-action="acionar-qr-code-upload"]:hover,
+[data-action="acionar-qr-code-upload"]:focus{
   color: var(--branco) !important;
   border-color: var(--branco-30) !important;
   background-color: var(--branco-10) !important;
@@ -97,12 +99,14 @@ input:focus{
   background-color: var(--preto);
 }
 
-.input-group-text{
+.input-group-text,
+.form-control{
   border-color: var(--branco-20) !important;
   color: var(--branco) !important;
 }
 
-.card-body .btn-gerar-qr-code{
+.card-body .btn-ler-qr-code,
+.modal-body .btn-copiar-resultado{
   margin-top: 1rem;
   width: 100%;
   color: var(--branco);
@@ -110,8 +114,8 @@ input:focus{
   border-color: var(--branco-20); 
 }
 
-.card-body .btn-gerar-qr-code:hover,
-.card-body .btn-gerar-qr-code:focus{
+.card-body .btn-ler-qr-code:hover,
+.card-body .btn-ler-qr-code:focus{
   background-color: var(--azul-escuro) !important;
 }
 
@@ -134,4 +138,15 @@ input:focus{
   --bs-tooltip-color: var(--branco) !important;
   --bs-tooltip-opacity: 1;
   --bs-tooltip-margin: 1rem;
+}
+
+[data-action="acionar-qr-code-upload"]{
+  border-radius: 0;
+}
+
+input[type=file]{
+  position: relative;
+  top: 0;
+  width: 0;
+  visibility: hidden;
 }

@@ -13,14 +13,15 @@ import { isEmpty } from './modulos/utilitarios.js';
   function popover(){
     $('[data-bs-toggle="popover"]').popover();  
   }
-  
+
   window.addEventListener('load', () => {
     const body = document.querySelector('body');
     try{
-      try{body.innerHTML += conteudos.html_base;}catch(error){};
+      // try{body.innerHTML += conteudos.html_base;}catch(error){};
       clickGerar();
+      verificarInputFile();
       clickReset();
-      clickBaixar();
+      // clickBaixar();
       atualizarLink();
       clickCompartilharApp();
       clickCopiar();
@@ -50,24 +51,65 @@ import { isEmpty } from './modulos/utilitarios.js';
   }
   
   const clickGerar = () => {
-    document.querySelector('form').addEventListener('submit', (evento) => {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (evento) => {
       evento.preventDefault();
-      const conteudo = document.querySelector('[data-conteudo="texto"]');
-      const valor = conteudo.value.trim();
       
-      if(!isEmpty(valor)){
-        if(valor.length <= 1750){
-          const img = document.querySelector('[data-conteudo="imagem-gerada"]');
-          if(img !== null){
-            img.setAttribute('src', `https://api.qrserver.com/v1/create-qr-code/?data=${valor}&amp;size=100x100`);
-            $('#modal-qr-code').modal('show');
-          }else{
-            console.log('Link muito grande...');
-          }
+      const input = form.querySelector('input[type=file]');
+      if(!isEmpty(input)){
+        if(!input.files.length == 0){
+          
+        }else{
+          // clickUpload()
+          input.click();
         }
-      }else{
-        conteudo.value = '';
-        conteudo.focus();
+      }
+    })
+  }
+
+  $('#modal-resultado').modal('show')
+
+  const clickCopiarResultado = () => {
+    try{
+      const modal = document.querySelector('#modal-resultado');
+      const botao = modal.querySelector('button#copiar-resultado');
+
+      botao.addEventListener('click', () => {
+        const texto = modal.querySelector('[data-conteudo="resultado-txt-qr-code"]');
+        if(!isEmpty(texto.textContent.trim())){
+          copiar(texto.textContent.trim());
+        }else{
+          //Vazio
+        }
+      });
+      
+    }catch(error){
+
+    }
+  }
+
+  clickCopiarResultado();
+
+  const verificarInputFile = () => {
+    const input = document.querySelector('[data-action="qr-code-upload"]');
+    input.addEventListener('input', () => {
+      if(!input.files.length == 0){
+        const file = input.files[0];
+        
+        try{
+          const nome = file.name.trim();
+          const tipo = file.type.split('/')[1].toLowerCase();
+
+          if(tipo == 'png' || tipo == 'jpeg'){
+            //OK, tipo válido
+          }else{
+            //Tipo inválido
+          }
+
+        }catch(error){
+
+        }
+
       }
     })
   }
