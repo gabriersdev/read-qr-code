@@ -49,9 +49,6 @@ import { isEmpty } from './modulos/utilitarios.js';
     })
   }
   
-  /* Chamada para reCaptcha */
-  window.onClick = onClick;
-  
   const clickGerar = () => {
     document.querySelector('form').addEventListener('submit', (evento) => {
       evento.preventDefault();
@@ -158,14 +155,4 @@ import { isEmpty } from './modulos/utilitarios.js';
       }, 3000)
     }
   })
-
-  function onClick(e) {
-    e.preventDefault();
-    grecaptcha.ready(function() {
-      grecaptcha.execute('6LfrZqUlAAAAAGUfogcIWFzH4yg9aFK-6YXoYoeG', {action: 'submit'}).then(function(token) {
-        //
-      });
-    });
-  }
-    
 })();
