@@ -58,7 +58,11 @@ import { isEmpty } from './modulos/utilitarios.js';
       const input = form.querySelector('input[type=file]');
       if(!isEmpty(input)){
         if(!input.files.length == 0){
-          
+          if(verificarUploadValido(input)){
+            console.log('OK');
+          }else{
+            console.log('Tipo inválido');
+          };
         }else{
           // clickUpload()
           input.click();
@@ -67,7 +71,19 @@ import { isEmpty } from './modulos/utilitarios.js';
     })
   }
 
-  $('#modal-resultado').modal('show')
+  // Rascunho
+  const requisicaoAPI = async (tamanho_max, imagem) => {
+    // enctype="multipart/form-data"
+    const retorno = await fetch('http://api.qrserver.com/v1/read-qr-code/', {
+      method: 'POST',
+      mode: 'CORS',
+      Headers: {
+        //'Content-Type': 'multipart/form-data' ?
+      }
+    })
+  }
+
+  // $('#modal-resultado').modal('show');
 
   const clickCopiarResultado = () => {
     try{
@@ -94,24 +110,29 @@ import { isEmpty } from './modulos/utilitarios.js';
     const input = document.querySelector('[data-action="qr-code-upload"]');
     input.addEventListener('input', () => {
       if(!input.files.length == 0){
-        const file = input.files[0];
-        
-        try{
-          const nome = file.name.trim();
-          const tipo = file.type.split('/')[1].toLowerCase();
-
-          if(tipo == 'png' || tipo == 'jpeg'){
-            //OK, tipo válido
-          }else{
-            //Tipo inválido
-          }
-
-        }catch(error){
-
-        }
-
+        //??
       }
     })
+  }
+
+  const verificarUploadValido = (input) => {
+    const file = input.files[0];
+        
+    try{
+      const nome = file.name.trim();
+      const tipo = file.type.split('/')[1].toLowerCase();
+
+      if(tipo == 'png' || tipo == 'jpeg'){
+        //OK, tipo válido
+        return true;
+      }else{
+        //Tipo inválido
+        return false;
+      }
+
+    }catch(error){
+      return false;
+    }
   }
 
   const clickReset = () => {
