@@ -13,7 +13,7 @@ import { isEmpty } from './modulos/utilitarios.js';
   function popover(){
     $('[data-bs-toggle="popover"]').popover();  
   }
-
+  
   window.addEventListener('load', () => {
     const body = document.querySelector('body');
     try{
@@ -58,11 +58,7 @@ import { isEmpty } from './modulos/utilitarios.js';
       const input = form.querySelector('input[type=file]');
       if(!isEmpty(input)){
         if(!input.files.length == 0){
-          if(verificarUploadValido(input)){
-            console.log('OK');
-          }else{
-            console.log('Tipo inválido');
-          };
+          executarConsulta(input);
         }else{
           // clickUpload()
           input.click();
@@ -70,152 +66,164 @@ import { isEmpty } from './modulos/utilitarios.js';
       }
     })
   }
-
+  
   // Rascunho
   const requisicaoAPI = async (tamanho_max, imagem) => {
     // enctype="multipart/form-data"
     const retorno = await fetch('http://api.qrserver.com/v1/read-qr-code/', {
-      method: 'POST',
-      mode: 'CORS',
-      Headers: {
-        //'Content-Type': 'multipart/form-data' ?
-      }
-    })
-  }
-
-  // $('#modal-resultado').modal('show');
-
-  const clickCopiarResultado = () => {
-    try{
-      const modal = document.querySelector('#modal-resultado');
-      const botao = modal.querySelector('button#copiar-resultado');
-
-      botao.addEventListener('click', () => {
-        const texto = modal.querySelector('[data-conteudo="resultado-txt-qr-code"]');
-        if(!isEmpty(texto.textContent.trim())){
-          copiar(texto.textContent.trim());
-        }else{
-          //Vazio
-        }
-      });
-      
-    }catch(error){
-
-    }
-  }
-
-  clickCopiarResultado();
-
-  const verificarInputFile = () => {
-    const input = document.querySelector('[data-action="qr-code-upload"]');
-    input.addEventListener('input', () => {
-      if(!input.files.length == 0){
-        //??
-      }
-    })
-  }
-
-  const verificarUploadValido = (input) => {
-    const file = input.files[0];
-        
-    try{
-      const nome = file.name.trim();
-      const tipo = file.type.split('/')[1].toLowerCase();
-
-      if(tipo == 'png' || tipo == 'jpeg'){
-        //OK, tipo válido
-        return true;
-      }else{
-        //Tipo inválido
-        return false;
-      }
-
-    }catch(error){
-      return false;
-    }
-  }
-
-  const clickReset = () => {
-    document.querySelector('form').addEventListener('reset', () => {
-      document.querySelector('[data-conteudo="texto"]').focus();
-    })
-  }
-  
-  const clickBaixar = () => {
-    document.querySelector('#baixar-qr-code').addEventListener('click', (evento) => {
-      evento.preventDefault();
-      
-      const img = document.querySelector('[data-conteudo="imagem-gerada"]');
-      // const download_capture = document.querySelector('a[data-acao="download-capture"]');
-      window.location.href = img.getAttribute('src');
-      // download_capture.setAttribute('src', img.getAttribute('src'));
-      // download_capture.click();
-    })
-  }  
-  
-  /* Link de compartilhamento */
-  const atualizarLink = () => {
-    const link = document.querySelector('#link-compartilhamento');
-    
-    try{
-      const pagina = new URL(window.location);
-      const url = `${pagina.origin}${pagina.pathname}`;
-      link.value = !isEmpty(url) ? url.toLowerCase().trim() : 'Link não atribuído'
-    }catch(error){
-      console.log(error);
-    }
-  }
-  
-  const clickCompartilharApp = () => {
-    document.querySelector('.btn-compartilhar-app').addEventListener('click', (evento) => {
-      $('#modal-compartilhar-app').modal('show')
-    })
-  }
-  
-  async function copiar(valor){
-    try{
-      await navigator.clipboard.writeText(valor);
-      return true;
-    }catch(error){
-      // console.log(error);
-      return false;
-    }
-  }
-  
-  async function feedback(classes, conteudo){
-    const modal = document.querySelector('#modal-compartilhar-app').querySelector('[data-conteudo="modal-body"]');
-    if(modal.querySelector('div.alert') == null){
-      const div = document.createElement('div');
-      div.classList.value = `${classes}`;
-      div.innerHTML = conteudo;
-      modal.appendChild(div)
-    }
-  }
-  
-  const clickCopiar = () => document.querySelector('#copiar-link-compartilhamento').addEventListener('click', () => {
-    const link = document.querySelector('#link-compartilhamento');
-    
-    try{
-      copiar(link.value).then((retorno) => {
-        if(retorno){
-          feedback(`mt-2 alert alert-success`,'Copiado!');
-        }else{
-          feedback(`mt-2 alert alert-alert`,'Erro!');
-        }
-      })
-      
-    }catch(error){
-      console.log(error)
-    }finally{
-      removerAlert();
-    }
-    
-    function removerAlert(elemento){
-      setTimeout(() => {
-        document.querySelector('#modal-compartilhar-app').querySelectorAll('div.alert').forEach(alert => {
-          alert.remove();
-        }) 
-      }, 3000)
+    method: 'POST',
+    mode: 'CORS',
+    Headers: {
+      //'Content-Type': 'multipart/form-data' ?
     }
   })
+}
+
+const executarConsulta = (input) => {
+  const form = document.querySelector('form');
+  const upload = verificarUploadValido(input);
+  if(upload.sucesso){
+    form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${upload.dados.nome}`
+  }else{
+    console.log('Tipo inválido');
+  };
+}
+
+// $('#modal-resultado').modal('show');
+
+const clickCopiarResultado = () => {
+  try{
+    const modal = document.querySelector('#modal-resultado');
+    const botao = modal.querySelector('button#copiar-resultado');
+    
+    botao.addEventListener('click', () => {
+      const texto = modal.querySelector('[data-conteudo="resultado-txt-qr-code"]');
+      if(!isEmpty(texto.textContent.trim())){
+        copiar(texto.textContent.trim());
+      }else{
+        //Vazio
+      }
+    });
+    
+  }catch(error){
+    
+  }
+}
+
+clickCopiarResultado();
+
+const verificarInputFile = () => {
+  const input = document.querySelector('[data-action="qr-code-upload"]');
+  input.addEventListener('input', () => {
+    if(!input.files.length == 0){
+      executarConsulta(input);
+    }
+  })
+}
+
+const verificarUploadValido = (input) => {
+  const file = input.files[0];
+  
+  try{
+    const nome = file.name.trim();
+    const tipo = file.type.split('/')[1].toLowerCase();
+    
+    if(tipo == 'png' || tipo == 'jpeg'){
+      //OK, tipo válido
+      return {sucesso: true, dados: {nome: nome}};
+    }else{
+      //Tipo inválido
+      return {sucesso: false};
+    }
+    
+  }catch(error){
+    return {sucesso: false};
+  }
+}
+
+const clickReset = () => {
+  const form = document.querySelector('form');
+  form.addEventListener('reset', () => {
+    form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${conteudos.conteudo_botao}`
+    form.querySelector('input[type=file]').value = '';
+  })
+}
+
+const clickBaixar = () => {
+  document.querySelector('#baixar-qr-code').addEventListener('click', (evento) => {
+    evento.preventDefault();
+    
+    const img = document.querySelector('[data-conteudo="imagem-gerada"]');
+    // const download_capture = document.querySelector('a[data-acao="download-capture"]');
+    window.location.href = img.getAttribute('src');
+    // download_capture.setAttribute('src', img.getAttribute('src'));
+    // download_capture.click();
+  })
+}  
+
+/* Link de compartilhamento */
+const atualizarLink = () => {
+  const link = document.querySelector('#link-compartilhamento');
+  
+  try{
+    const pagina = new URL(window.location);
+    const url = `${pagina.origin}${pagina.pathname}`;
+    link.value = !isEmpty(url) ? url.toLowerCase().trim() : 'Link não atribuído'
+  }catch(error){
+    console.log(error);
+  }
+}
+
+const clickCompartilharApp = () => {
+  document.querySelector('.btn-compartilhar-app').addEventListener('click', (evento) => {
+    $('#modal-compartilhar-app').modal('show')
+  })
+}
+
+async function copiar(valor){
+  try{
+    await navigator.clipboard.writeText(valor);
+    return true;
+  }catch(error){
+    // console.log(error);
+    return false;
+  }
+}
+
+async function feedback(classes, conteudo){
+  const modal = document.querySelector('#modal-compartilhar-app').querySelector('[data-conteudo="modal-body"]');
+  if(modal.querySelector('div.alert') == null){
+    const div = document.createElement('div');
+    div.classList.value = `${classes}`;
+    div.innerHTML = conteudo;
+    modal.appendChild(div)
+  }
+}
+
+const clickCopiar = () => document.querySelector('#copiar-link-compartilhamento').addEventListener('click', () => {
+  const link = document.querySelector('#link-compartilhamento');
+  
+  try{
+    copiar(link.value).then((retorno) => {
+      if(retorno){
+        feedback(`mt-2 alert alert-success`,'Copiado!');
+      }else{
+        feedback(`mt-2 alert alert-alert`,'Erro!');
+      }
+    })
+    
+  }catch(error){
+    console.log(error)
+  }finally{
+    removerAlert();
+  }
+  
+  function removerAlert(elemento){
+    setTimeout(() => {
+      document.querySelector('#modal-compartilhar-app').querySelectorAll('div.alert').forEach(alert => {
+        alert.remove();
+      }) 
+    }, 3000)
+  }
+})
 })();

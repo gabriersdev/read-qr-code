@@ -71,10 +71,6 @@
     function clickUpload(botao){
       botao.parentElement.querySelector('input[type=file]').click();
       botao.innerHTML = `${conteudos.spinner}`;
-
-      setTimeout(() => {
-        botao.innerHTML = `${conteudos.conteudo_botao}`;
-      }, 2000);
     }
   </script>
   
