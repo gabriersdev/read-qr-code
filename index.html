@@ -33,7 +33,7 @@
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="shortcut icon" href="./assets/img/#" type="image/x-icon">
   
-  <title>Document</title>
+  <title>Ler QR Code</title>
   
   <script src="./assets/js/frameworks/jquery.js" defer></script>
   <script src="./assets/js/frameworks/bootstrap.js" defer></script>
@@ -71,6 +71,12 @@
     function clickUpload(botao){
       botao.parentElement.querySelector('input[type=file]').click();
       botao.innerHTML = `${conteudos.spinner}`;
+
+      setTimeout(() => {
+        if(botao.parentElement.querySelector('input[type=file]').files.length == 0){
+          botao.innerHTML = `${conteudos.conteudo_botao}`
+        }
+      }, 2000)
     }
   </script>
   

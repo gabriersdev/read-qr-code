@@ -67,15 +67,32 @@ import { isEmpty } from './modulos/utilitarios.js';
     })
   }
   
+
+
   // Rascunho
   const requisicaoAPI = async (tamanho_max, imagem) => {
     // enctype="multipart/form-data"
-    const retorno = await fetch('http://api.qrserver.com/v1/read-qr-code/', {
+    return await fetch('http://api.qrserver.com/v1/read-qr-code/', {
     method: 'POST',
-    mode: 'CORS',
-    Headers: {
-      //'Content-Type': 'multipart/form-data' ?
-    }
+    headers: {
+      'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+      'Content-Type': 'multipart/form-data'
+    }, 
+    cache: 'default',
+    mode: 'cors',
+    body: JSON.stringify({
+      file: imagem,
+      MAX_FILE_SIZE: tamanho_max
+    })
+  }) 
+
+  .then(response => {
+    console.log(response);
+    return true;
+  })
+
+  .catch(error => {
+    console.log(`Erro ${error}`);
   })
 }
 
@@ -84,11 +101,14 @@ const executarConsulta = (input) => {
   const upload = verificarUploadValido(input);
   if(upload.sucesso){
     form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${upload.dados.nome}`
+    console.log(input.value);
+    // requisicaoAPI(1048576, input.value);
   }else{
     console.log('Tipo inválido');
   };
 }
 
+// requisicaoAPI(1048576, '../img/download.png');
 // $('#modal-resultado').modal('show');
 
 const clickCopiarResultado = () => {
