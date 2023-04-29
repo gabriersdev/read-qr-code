@@ -53,13 +53,13 @@ import { isEmpty } from './modulos/utilitarios.js';
   const clickGerar = () => {
     const form = document.querySelector('form');
     form.addEventListener('submit', (evento) => {
-      evento.preventDefault();
       
       const input = form.querySelector('input[type=file]');
       if(!isEmpty(input)){
         if(!input.files.length == 0){
-          executarConsulta(input);
+          // executarConsulta(input);
         }else{
+          evento.preventDefault();
           // clickUpload()
           input.click();
         }
@@ -101,7 +101,7 @@ const executarConsulta = (input) => {
   const upload = verificarUploadValido(input);
   if(upload.sucesso){
     form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${upload.dados.nome}`
-    console.log(input.value);
+    // console.log(input.value);
     // requisicaoAPI(1048576, input.value);
   }else{
     console.log('Tipo inválido');

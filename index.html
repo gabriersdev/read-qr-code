@@ -5,30 +5,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- 
-    <meta name="keywords" content="#">
-    <meta name="author" content="Gabriel Ribeiro">
-    <meta property="og:title" content="#">
-    <meta property="og:description" content="#">
-    <meta property="og:url" content="#">
-    <meta property="og:image" content="#">
-    <meta property="og:image:secure_url" content="#"> 
-    <meta property="og:image:type" content="image/png"> 
-    <meta property="og:image:width" content="400"> 
-    <meta property="og:image:height" content="300"> 
-  -->
+  <meta name="keywords" content="QR; Code; API; Read">
+  <meta name="author" content="Gabriel Ribeiro">
+  <meta property="og:title" content="Ler QR Code">
+  <meta property="og:description" content="Leitor de códigos QR usando a API QR Server">
+  <meta property="og:url" content="https://gabrieszin.github.io/read-qr-code/">
+  <meta property="og:image" content="https://gabrieszin.github.io/read-qr-code/assets/img/thumb.png">
+  <meta property="og:image:secure_url" content="https://gabrieszin.github.io/read-qr-code/assets/img/thumb.png"> 
+  <meta property="og:image:type" content="image/png"> 
+  <meta property="og:image:width" content="400"> 
+  <meta property="og:image:height" content="300"> 
   
-  <!-- 
-    <meta http-equiv="Content-Security-Policy" 
-    content="default-src 'self' 'unsafe-inline'; 
-    style-src 'self' 'unsafe-inline'; 
-    style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' 'unsafe-inline'; 
-    font-src 'self' 'unsafe-inline' https://fonts.gstatic.com https://cdn.jsdelivr.net/; 
-    script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/ https://code.jquery.com/ https://cdnjs.cloudflare.com/; 
-    frame-src 'self' 'unsafe-inline';
-    connect-src 'self' 'unsafe-inline';">   
-  -->
+  <meta http-equiv="Content-Security-Policy" 
+  content="default-src 'self' 'unsafe-inline'; 
+  style-src 'self' 'unsafe-inline'; 
+  style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  img-src 'self' 'unsafe-inline'; 
+  font-src 'self' 'unsafe-inline' https://fonts.gstatic.com https://cdn.jsdelivr.net/; 
+  script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/ https://code.jquery.com/ https://cdnjs.cloudflare.com/; 
+  frame-src 'self' 'unsafe-inline';
+  connect-src 'self' 'unsafe-inline';">   
   
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="shortcut icon" href="./assets/img/#" type="image/x-icon">
@@ -58,7 +54,7 @@
     </div>
   </noscript>
   
-  <main class="container"><form class="card"> <div class="card-header"> <b>Ler QR Code</b> <button type="button" class="btn btn-compartilhar-app"><i class="bi bi-share-fill"></i></button> </div> <div class="card-body"> <div class="input-group trnsp"> <span class="input-group-text trnsp"><i class="bi bi-qr-code"></i></span> <button type="button" onclick="clickUpload(this)" class="btn form-control" data-action="acionar-qr-code-upload"><i class="bi bi-upload"></i>&nbsp;&nbsp;Carregar Arquivo</button><input type="file" class="trnsp" id="floating-input-group" data-action="qr-code-upload" placeholder="Seu QR Code" autocomplete="off"><button type="reset" class="input-group-text trnsp" data-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-placement="top" title="limpar"><i class="bi-x-lg"></i></button> </div> <button type="submit" class="btn btn-ler-qr-code" data-action="submit">Ler QR Code</button> </div></form></main>
+  <main class="container"><form class="card" enctype="multipart/form-data" action="http://api.qrserver.com/v1/read-qr-code/" method="POST"> <div class="card-header"> <b>Ler QR Code</b> <button type="button" class="btn btn-compartilhar-app"><i class="bi bi-share-fill"></i></button> </div> <div class="card-body"> <div class="input-group trnsp"> <span class="input-group-text trnsp"><i class="bi bi-qr-code"></i></span> <button type="button" onclick="clickUpload(this)" class="btn form-control" data-action="acionar-qr-code-upload"><i class="bi bi-upload"></i>&nbsp;&nbsp;Carregar Arquivo</button><input type="file" name="file" id="file" class="trnsp" id="floating-input-group" data-action="qr-code-upload" placeholder="Seu QR Code" autocomplete="off"><button type="reset" class="input-group-text trnsp" data-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-placement="top" title="limpar"><i class="bi-x-lg"></i></button> </div> <button type="submit" class="btn btn-ler-qr-code" data-action="submit">Ler QR Code</button> </div></form></main>
   
   <div class="modal fade" id="modal-compartilhar-app" aria-hidden="true" aria-labelledby="modal-compartilhar-appLabel" tabindex="-1"><div class="modal-dialog modal-dialog-centered"> <div class="modal-content"> <div class="modal-header"> <h1 class="modal-title fs-5" id="modal-compartilhar-appLabel">Compartilhe</h1> <button data-modal-fecha><i class="bi bi-x-lg"></i></button> </div> <div class="modal-body" data-conteudo="modal-body"> <span class="texto-modal-body"> Compartilhe esta ideia! <br> <span class="texto-reduzido">Copie o link ou favorite esta página com CTRL + D</span> </span> <div class="input-group"> <button class="btn btn-outline-secondary disabled dashed" disabled><i class="bi bi-link"></i></button> <input type="url" class="form-control trnsp" id="link-compartilhamento" readonly value="https://www.xxx.xxx.br"> <button class="btn btn-outline-secondary" type="button" id="copiar-link-compartilhamento">Copiar</button> </div> </div> </div></div></div> 
 
