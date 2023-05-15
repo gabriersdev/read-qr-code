@@ -17,11 +17,13 @@ import { isEmpty } from './modulos/utilitarios.js';
   window.addEventListener('load', () => {
     const body = document.querySelector('body');
     try{
-      // try{body.innerHTML += conteudos.html_base;}catch(error){};
+      try{
+        body.innerHTML += conteudos.conteudo_principal;
+        body.innerHTML += conteudos.conteudo_modal;
+      }catch(error){};
       clickGerar();
       verificarInputFile();
       clickReset();
-      // clickBaixar();
       atualizarLink();
       clickCompartilharApp();
       clickCopiar();
@@ -66,8 +68,6 @@ import { isEmpty } from './modulos/utilitarios.js';
       }
     })
   }
-  
-
 
   // Rascunho
   const requisicaoAPI = async (tamanho_max, imagem) => {
@@ -247,3 +247,15 @@ const clickCopiar = () => document.querySelector('#copiar-link-compartilhamento'
   }
 })
 })();
+
+function clickUpload(botao){
+  botao.parentElement.querySelector('input[type=file]').click();
+  botao.innerHTML = `${conteudos.spinner}`;
+  
+  setTimeout(() => {
+    if(botao.parentElement.querySelector('input[type=file]').files.length == 0){
+      botao.innerHTML = `${conteudos.conteudo_botao}`
+    }
+  }, 2000)
+}
+window.clickUpload = clickUpload;
