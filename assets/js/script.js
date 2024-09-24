@@ -5,17 +5,6 @@ import { isEmpty } from './modulos/utilitarios.js';
 
 import QrScanner from './frameworks/qr-scanner.min.js'
 
-// TODO - Implementar o uso do framework QR-Scanner para as imagens enviadas
-(() => {
-  // Testando qr-scanner
-  const bs64 = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABHklEQVRoge3YOw7CMBAE0LUoUnIEjuKjhaPlKDlCSoqIwbu281EEFCQbihkhCu+rGGE7EfmWFjW9yO0pckF3mdZwJ9gPDPknD+iDmjiayYsNgTPQUoZQyxIDjTVFcBZYlkVwLrC/T0pHcBqYN7Eyfb/LEfwCUNOb6T4c7gTHgnVyX/I+BAeCUtZgI9idFqPEh7T2IXAEck1T0dHNHjHyhTbayDYxAlcA6HeaJqNNjTrS1LII9gPWhdXRWQnR7kjA1AWBAyhXVtRXHLGWReAOFgmYkirTw6Ih8ATttLi609r2tTzcCRzA/KyXD5RNWQT7AV0pb5NCeaaO87+G4BwAEPwL6GU+uwECf2CpICeWV6wErgA127KwPdwJDgTf8gImBlBJD4aPqAAAAABJRU5ErkJggg==`
-
-  QrScanner.scanImage(bs64, { returnDetailedScanResult: true })
-    .then(result => console.log(result))
-    .catch(error => console.error(error || 'No QR code found.'));
-})();
-
-
 (() => {
   function tooltips() {
     $(function () {
@@ -26,28 +15,6 @@ import QrScanner from './frameworks/qr-scanner.min.js'
   function popover() {
     $('[data-bs-toggle="popover"]').popover();
   }
-
-  window.addEventListener('load', () => {
-    const body = document.querySelector('body');
-    try {
-      try {
-        body.innerHTML += conteudos.conteudo_principal;
-        body.innerHTML += conteudos.conteudo_modal;
-      } catch (error) { };
-      clickGerar();
-      verificarInputFile();
-      clickReset();
-      atualizarLink();
-      clickCompartilharApp();
-      clickCopiar();
-      controleFechamentoModal();
-      tooltips();
-    } catch (error) {
-      body.innerHTML += conteudos.erro_carregamento;
-    } finally {
-      try { body.querySelector('[data-conteudo="area-loading-conteudo"]').remove(); } catch (error) { };
-    }
-  })
 
   document.querySelectorAll('[data-recarrega-pagina]').forEach(botao => {
     botao.addEventListener('click', () => {
@@ -68,101 +35,87 @@ import QrScanner from './frameworks/qr-scanner.min.js'
   const clickGerar = () => {
     const form = document.querySelector('form');
     form.addEventListener('submit', (evento) => {
-
       const input = form.querySelector('input[type=file]');
       evento.preventDefault();
 
-      // Image to Base 64
-      const file = input.files[0]
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onload = () => {
-        const base64 = reader.result.split(',')[1];
-        console.log(base64);
-        console.log(reader.result);
-      }
-
       if (!isEmpty(input)) {
-        if (!input.files.length == 0) {
-          // executarConsulta(input);
+        if (input.files.length == 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Primeiro carregue um arquivo!',
+            text: 'Tente novamente.',
+            footer: 'Erro: VL69'
+          })
+        } else if (!executarConsulta(input)) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Tipo de arquivo inválido',
+            text: 'Tente novamente.',
+            footer: 'Erro: VL92'
+          })
         } else {
-          evento.preventDefault();
-          // clickUpload()
-          input.click();
+
+          // Image to Base 64
+          const file = input.files[0]
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+
+          reader.onload = () => {
+            QrScanner.scanImage(reader.result, { returnDetailedScanResult: true })
+              .then((result) => {
+                if (!result.data) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'A imagem não é um QR Code',
+                    text: 'Tente novamente.',
+                    footer: 'Erro: VL85'
+                  })
+                  return false;
+                }
+
+                Swal.fire({
+                  icon: 'info',
+                  title: `Tradução do QR Code: ${result.data}`,
+                })
+
+                $('#modal-resultado').modal('show');
+              })
+              .catch((error) => {
+                console.log(error, input.files[0]);
+                Swal.fire({
+                  icon: 'error',
+                  title: error.message || 'A imagem não é um QR Code',
+                  text: 'Tente novamente.',
+                  footer: 'Erro: VL101'
+                })
+
+                console.error(error);
+              });
+          }
         }
       }
     })
-  }
-
-  // Rascunho
-  const requisicaoAPI = async (tamanho_max, imagem) => {
-    // enctype="multipart/form-data"
-    return await fetch('http://api.qrserver.com/v1/read-qr-code/', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-        'Content-Type': 'multipart/form-data'
-      },
-      cache: 'default',
-      mode: 'cors',
-      body: JSON.stringify({
-        file: imagem,
-        MAX_FILE_SIZE: tamanho_max
-      })
-    })
-
-      .then(response => {
-        console.log(response);
-        return true;
-      })
-
-      .catch(error => {
-        console.log(`Erro ${error}`);
-      })
   }
 
   const executarConsulta = (input) => {
-    const form = document.querySelector('form');
-    const upload = verificarUploadValido(input);
-    if (upload.sucesso) {
-      form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${upload.dados.nome}`
-      // console.log(input.value);
-      // requisicaoAPI(1048576, input.value);
-    } else {
-      console.log('Tipo inválido');
-    };
-  }
-
-  // requisicaoAPI(1048576, '../img/download.png');
-  // $('#modal-resultado').modal('show');
-
-  const clickCopiarResultado = () => {
-    try {
-      const modal = document.querySelector('#modal-resultado');
-      const botao = modal.querySelector('button#copiar-resultado');
-
-      botao.addEventListener('click', () => {
-        const texto = modal.querySelector('[data-conteudo="resultado-txt-qr-code"]');
-        if (!isEmpty(texto.textContent.trim())) {
-          copiar(texto.textContent.trim());
-        } else {
-          //Vazio
-        }
-      });
-
-    } catch (error) {
-
+    const [form, upload] = [document.querySelector('form'), verificarUploadValido(input)];
+    if (upload.success) form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${upload.dados.nome}`
+    else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Tipo de arquivo inválido',
+        text: 'Tente novamente.',
+        footer: 'Erro: VL106'
+      })
     }
+    return upload.success;
   }
-
-  clickCopiarResultado();
 
   const verificarInputFile = () => {
     const input = document.querySelector('[data-action="qr-code-upload"]');
     input.addEventListener('input', () => {
       if (!input.files.length == 0) {
-        executarConsulta(input);
+        if (executarConsulta(input));
       }
     })
   }
@@ -176,14 +129,14 @@ import QrScanner from './frameworks/qr-scanner.min.js'
 
       if (tipo == 'png' || tipo == 'jpeg') {
         //OK, tipo válido
-        return { sucesso: true, dados: { nome: nome } };
+        return { success: true, dados: { nome: nome } };
       } else {
         //Tipo inválido
-        return { sucesso: false };
+        return { success: false };
       }
 
     } catch (error) {
-      return { sucesso: false };
+      return { success: false };
     }
   }
 
@@ -192,18 +145,6 @@ import QrScanner from './frameworks/qr-scanner.min.js'
     form.addEventListener('reset', () => {
       form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${conteudos.conteudo_botao}`
       form.querySelector('input[type=file]').value = '';
-    })
-  }
-
-  const clickBaixar = () => {
-    document.querySelector('#baixar-qr-code').addEventListener('click', (evento) => {
-      evento.preventDefault();
-
-      const img = document.querySelector('[data-conteudo="imagem-gerada"]');
-      // const download_capture = document.querySelector('a[data-acao="download-capture"]');
-      window.location.href = img.getAttribute('src');
-      // download_capture.setAttribute('src', img.getAttribute('src'));
-      // download_capture.click();
     })
   }
 
@@ -221,11 +162,12 @@ import QrScanner from './frameworks/qr-scanner.min.js'
   }
 
   const clickCompartilharApp = () => {
-    document.querySelector('.btn-compartilhar-app').addEventListener('click', (evento) => {
+    document.querySelector('.btn-compartilhar-app').addEventListener('click', () => {
       $('#modal-compartilhar-app').modal('show')
     })
   }
 
+  // TODO - Refatorar
   async function copiar(valor) {
     try {
       await navigator.clipboard.writeText(valor);
@@ -236,7 +178,8 @@ import QrScanner from './frameworks/qr-scanner.min.js'
     }
   }
 
-  async function feedback(classes, conteudo) {
+  // TODO - Refatorar
+  function feedback(classes, conteudo) {
     const modal = document.querySelector('#modal-compartilhar-app').querySelector('[data-conteudo="modal-body"]');
     if (modal.querySelector('div.alert') == null) {
       const div = document.createElement('div');
@@ -246,7 +189,8 @@ import QrScanner from './frameworks/qr-scanner.min.js'
     }
   }
 
-  const clickCopiar = () => document.querySelector('#copiar-link-compartilhamento').addEventListener('click', () => {
+  // TODO - Refatorar
+  const clickCopiarLinkCompartilhamento = () => document.querySelector('#copiar-link-compartilhamento').addEventListener('click', () => {
     const link = document.querySelector('#link-compartilhamento');
 
     try {
@@ -264,12 +208,40 @@ import QrScanner from './frameworks/qr-scanner.min.js'
       removerAlert();
     }
 
-    function removerAlert(elemento) {
+    function removerAlert() {
       setTimeout(() => {
         document.querySelector('#modal-compartilhar-app').querySelectorAll('div.alert').forEach(alert => {
           alert.remove();
         })
       }, 3000)
+    }
+  })
+
+  window.addEventListener('load', () => {
+    const body = document.querySelector('body');
+    try {
+      try {
+        body.innerHTML += conteudos.conteudo_principal;
+        body.innerHTML += conteudos.conteudo_modal;
+        body.innerHTML += conteudos.conteudo_modal_resultado;
+
+        $('#modal-resultado').modal('show');
+
+        clickGerar();
+        verificarInputFile();
+        clickReset();
+        atualizarLink();
+        clickCompartilharApp();
+        clickCopiarLinkCompartilhamento();
+        controleFechamentoModal();
+        tooltips();
+      } catch (error) {
+
+      };
+    } catch (error) {
+      body.innerHTML += conteudos.erro_carregamento;
+    } finally {
+      try { body.querySelector('[data-conteudo="area-loading-conteudo"]').remove(); } catch (error) { };
     }
   })
 })();
@@ -284,4 +256,5 @@ function clickUpload(botao) {
     }
   }, 2000)
 }
+
 window.clickUpload = clickUpload;
