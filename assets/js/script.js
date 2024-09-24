@@ -1,265 +1,205 @@
 "use strict";
 
 import { conteudos } from './modulos/conteudos.js';
-import { isEmpty } from './modulos/utilitarios.js';
-
 import QrScanner from './frameworks/qr-scanner.min.js'
 
 (() => {
-  function tooltips() {
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  }
+  // Utility functions
+  const showError = (message, footer) => {
+    Swal.fire({
+      icon: 'error',
+      title: message,
+      text: 'Try again.',
+      footer: footer
+    });
+  };
 
-  function popover() {
-    $('[data-bs-toggle="popover"]').popover();
-  }
+  const showSuccess = (title, message) => {
+    Swal.fire({
+      title: title,
+      text: message,
+      cancelButtonText: 'Close',
+      showCloseButton: true,
+      showLoaderOnConfirm: true,
+    });
+  };
 
-  document.querySelectorAll('[data-recarrega-pagina]').forEach(botao => {
-    botao.addEventListener('click', () => {
-      window.location.reload();
-    })
-  })
-
-  const controleFechamentoModal = () => {
-    const modais = document.querySelectorAll('.modal');
-    modais.forEach(modal => {
-      const btnFecha = modal.querySelector('[data-modal-fecha]');
-      btnFecha.addEventListener('click', () => {
-        $('#' + modal.id).modal('hide');
-      })
-    })
-  }
-
-  const clickGerar = () => {
-    const form = document.querySelector('form');
-    form.addEventListener('submit', (evento) => {
-      const input = form.querySelector('input[type=file]');
-      evento.preventDefault();
-
-      if (!isEmpty(input)) {
-        if (input.files.length == 0) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Primeiro, carregue um arquivo!',
-            text: 'Tente novamente.',
-            footer: 'Erro: VL69'
-          })
-        } else if (!executarConsulta(input)) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Tipo de arquivo inválido',
-            text: 'Tente novamente.',
-            footer: 'Erro: VL92'
-          })
-        } else {
-
-          // Image to Base 64
-          const file = input.files[0]
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-
-          reader.onload = () => {
-            QrScanner.scanImage(reader.result, { returnDetailedScanResult: true })
-              .then((result) => {
-                if (!result.data) {
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'A imagem não é um QR Code',
-                    text: 'Tente novamente.',
-                    footer: 'Erro: VL85'
-                  })
-                  return false;
-                }
-
-                const value = result.data;
-
-                Swal.fire({
-                  title: `Resultado:`,
-                  text: value,
-                  cancelButtonText: 'Fechar',
-                  showCloseButton: true,
-                  showLoaderOnConfirm: true,
-                })
-
-                // $('#modal-resultado').modal('show');
-              })
-              .catch((error) => {
-                console.log(error, input.files[0]);
-                Swal.fire({
-                  icon: 'error',
-                  title: error.message || 'A imagem não é um QR Code',
-                  text: 'Tente novamente.',
-                  footer: 'Erro: VL101'
-                })
-
-                console.error(error);
-              });
-          }
-        }
-      }
-    })
-  }
-
-  const executarConsulta = (input) => {
-    const [form, upload] = [document.querySelector('form'), verificarUploadValido(input)];
-    if (upload.success) form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${upload.dados.nome}`
-    else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Tipo de arquivo inválido',
-        text: 'Tente novamente.',
-        footer: 'Erro: VL106'
-      })
-    }
-    return upload.success;
-  }
-
-  const verificarInputFile = () => {
-    const input = document.querySelector('[data-action="qr-code-upload"]');
-    input.addEventListener('input', () => {
-      if (!input.files.length == 0) {
-        if (executarConsulta(input));
-      }
-    })
-  }
-
-  const verificarUploadValido = (input) => {
-    const file = input.files[0];
-
+  const copyText = async (text) => {
     try {
-      const nome = file.name.trim();
-      const tipo = file.type.split('/')[1].toLowerCase();
-
-      if (tipo == 'png' || tipo == 'jpeg') {
-        //OK, tipo válido
-        return { success: true, dados: { nome: nome } };
-      } else {
-        //Tipo inválido
-        return { success: false };
-      }
-
-    } catch (error) {
-      return { success: false };
-    }
-  }
-
-  const clickReset = () => {
-    const form = document.querySelector('form');
-    form.addEventListener('reset', () => {
-      form.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = `${conteudos.conteudo_botao}`
-      form.querySelector('input[type=file]').value = '';
-    })
-  }
-
-  /* Link de compartilhamento */
-  const atualizarLink = () => {
-    const link = document.querySelector('#link-compartilhamento');
-
-    try {
-      const pagina = new URL(window.location);
-      const url = `${pagina.origin}${pagina.pathname}`;
-      link.value = !isEmpty(url) ? url.toLowerCase().trim() : 'Link não atribuído'
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const clickCompartilharApp = () => {
-    document.querySelector('.btn-compartilhar-app').addEventListener('click', () => {
-      $('#modal-compartilhar-app').modal('show')
-    })
-  }
-
-  // TODO - Refatorar
-  async function copiar(valor) {
-    try {
-      await navigator.clipboard.writeText(valor);
+      await navigator.clipboard.writeText(text);
       return true;
     } catch (error) {
-      // console.log(error);
       return false;
     }
-  }
+  };
 
-  // TODO - Refatorar
-  function feedback(classes, conteudo) {
-    const modal = document.querySelector('#modal-compartilhar-app').querySelector('[data-conteudo="modal-body"]');
-    if (modal.querySelector('div.alert') == null) {
-      const div = document.createElement('div');
-      div.classList.value = `${classes}`;
-      div.innerHTML = conteudo;
-      modal.appendChild(div)
-    }
-  }
+  // File handling functions
+  const isValidFileType = (type) => ['png', 'jpeg'].includes(type);
 
-  // TODO - Refatorar
-  const clickCopiarLinkCompartilhamento = () => document.querySelector('#copiar-link-compartilhamento').addEventListener('click', () => {
-    const link = document.querySelector('#link-compartilhamento');
-
+  const getFileInfo = (file) => {
     try {
-      copiar(link.value).then((retorno) => {
-        if (retorno) {
-          feedback(`mt-2 alert alert-success`, 'Copiado!');
-        } else {
-          feedback(`mt-2 alert alert-alert`, 'Erro!');
-        }
-      })
+      const name = file.name.trim();
+      const type = file.type.split('/')[1].toLowerCase();
 
+      return { name, type };
     } catch (error) {
-      console.log(error)
-    } finally {
-      removerAlert();
+      return { name: null, type: null };
     }
+  };
 
-    function removerAlert() {
-      setTimeout(() => {
-        document.querySelector('#modal-compartilhar-app').querySelectorAll('div.alert').forEach(alert => {
-          alert.remove();
-        })
-      }, 3000)
-    }
-  })
+  // QR Code handling functions
+  const readQRCodeFromImage = (imageBase64) => {
+    return QrScanner.scanImage(imageBase64, { returnDetailedScanResult: true })
+      .then((result) => {
+        if (!result.data) {
+          throw new Error('The image is not a QR Code');
+        }
+        return result.data;
+      });
+  };
 
+  // DOM manipulation functions
+  const updateFileInput = (input, text) => {
+    input.parentElement.querySelector('[data-action="acionar-qr-code-upload"]').innerHTML = text;
+  };
+
+  const displayFeedback = (modal, message, type) => {
+    const div = document.createElement('div');
+    div.classList.value = `mt-2 mb-0 alert alert-${type}`;
+    div.innerHTML = message;
+
+    const modalContent = modal.querySelector('[data-conteudo="modal-body"]');
+    modalContent.appendChild(div);
+
+    setTimeout(() => div.remove(), 3000);
+  };
+
+  // Event Listeners
+  const addEventListeners = () => {
+    const form = document.querySelector('form');
+    const fileInput = form.querySelector('input[type=file]');
+    const uploadButton = form.querySelector('[data-action="acionar-qr-code-upload"]');
+
+    // Share modal elements
+    const shareButton = document.querySelector('.btn-compartilhar-app');
+    const copyLinkButton = document.querySelector('#copiar-link-compartilhamento');
+    const shareModal = document.querySelector('#modal-compartilhar-app');
+
+    // Result modal elements
+    const copyResultButton = document.querySelector('#copiar-resultado');
+    const resultModal = document.querySelector('#modal-resultado');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      if (fileInput.files.length === 0) {
+        showError('First, upload a file!', 'Error: VL69');
+        // Click the hidden file input to open the file picker dialog
+        form.querySelector('input[type=file]').click();
+        return;
+      }
+
+      const { name, type } = getFileInfo(fileInput.files[0]);
+
+      if (!isValidFileType(type)) {
+        showError('Invalid file type', 'Error: VL92');
+        return;
+      }
+
+      updateFileInput(fileInput, name);
+
+      const reader = new FileReader();
+      reader.readAsDataURL(fileInput.files[0]);
+
+      reader.onload = () => {
+        readQRCodeFromImage(reader.result)
+          .then((qrCodeContent) => {
+            const modal = document.querySelector('#modal-resultado');
+            if (modal) {
+              modal.querySelector('[data-conteudo="resultado-txt-qr-code"]').value = qrCodeContent;
+              $('#modal-resultado').modal('show');
+            } else {
+              showSuccess('Result:', qrCodeContent);
+            }
+          })
+          .catch((error) => showError(error.message || 'The image is not a QR Code', 'Error: VL101'));
+      };
+    });
+
+    // Event listeners for the form reset
+    form.addEventListener('reset', () => {
+      // Set the button text to the initial state
+      updateFileInput(fileInput, conteudos.conteudo_botao);
+      // Clear the file input
+      fileInput.value = '';
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        const { name, type } = getFileInfo(fileInput.files[0]);
+        if (isValidFileType(type)) {
+          updateFileInput(fileInput, name);
+        } else {
+          showError('Invalid file type', 'Error: VL130');
+          // Reset the form, clear the file input and update the button text to the initial state
+          // Dispatch the reset event, monitor the reset event listener
+          form.reset();
+        }
+      }
+    });
+
+    uploadButton.addEventListener('click', () => fileInput.click());
+
+    shareButton.addEventListener('click', () => {
+      $('#modal-compartilhar-app').modal('show');
+    });
+
+    copyLinkButton.addEventListener('click', async () => {
+      const link = document.querySelector('#link-compartilhamento').value;
+      const success = await copyText(link);
+      displayFeedback(shareModal, success ? 'Copiado!' : 'Erro!', success ? 'success' : 'danger');
+    });
+
+    copyResultButton.addEventListener('click', async () => {
+      const qrCodeContent = document.querySelector('[data-conteudo="resultado-txt-qr-code"]').value;
+      const success = await copyText(qrCodeContent);
+      displayFeedback(resultModal, success ? 'Copiado!' : 'Erro!', success ? 'success' : 'danger');
+    });
+  };
+
+  // Initialization
   window.addEventListener('load', () => {
     const body = document.querySelector('body');
+
     try {
-      try {
-        body.innerHTML += conteudos.conteudo_principal;
-        body.innerHTML += conteudos.conteudo_modal;
-        body.innerHTML += conteudos.conteudo_modal_resultado;
+      body.innerHTML += conteudos.conteudo_principal;
+      body.innerHTML += conteudos.conteudo_modal;
+      body.innerHTML += conteudos.conteudo_modal_resultado;
 
-        // $('#modal-resultado').modal('show');
+      addEventListeners();
 
-        clickGerar();
-        verificarInputFile();
-        clickReset();
-        atualizarLink();
-        clickCompartilharApp();
-        clickCopiarLinkCompartilhamento();
-        controleFechamentoModal();
-        tooltips();
-      } catch (error) {
+      document.querySelectorAll('[data-recarrega-pagina]').forEach(button => {
+        button.addEventListener('click', () => {
+          window.location.reload();
+        });
+      });
 
-      };
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.querySelector('[data-modal-fecha]').addEventListener('click', () => {
+          $(`#${modal.id}`).modal('hide');
+        });
+      });
+
+      $('[data-toggle="tooltip"]').tooltip();
+      $('[data-bs-toggle="popover"]').popover();
+
+      document.querySelector('#link-compartilhamento').value = window.location.href;
     } catch (error) {
       body.innerHTML += conteudos.erro_carregamento;
     } finally {
-      try { body.querySelector('[data-conteudo="area-loading-conteudo"]').remove(); } catch (error) { };
+      try {
+        body.querySelector('[data-conteudo="area-loading-conteudo"]').remove();
+      } catch (error) { }
     }
-  })
+  });
 })();
-
-function clickUpload(botao) {
-  botao.parentElement.querySelector('input[type=file]').click();
-  botao.innerHTML = `${conteudos.spinner}`;
-
-  setTimeout(() => {
-    if (botao.parentElement.querySelector('input[type=file]').files.length == 0) {
-      botao.innerHTML = `${conteudos.conteudo_botao}`
-    }
-  }, 2000)
-}
-
-window.clickUpload = clickUpload;
