@@ -42,7 +42,7 @@ import QrScanner from './frameworks/qr-scanner.min.js'
         if (input.files.length == 0) {
           Swal.fire({
             icon: 'error',
-            title: 'Primeiro carregue um arquivo!',
+            title: 'Primeiro, carregue um arquivo!',
             text: 'Tente novamente.',
             footer: 'Erro: VL69'
           })
@@ -73,12 +73,17 @@ import QrScanner from './frameworks/qr-scanner.min.js'
                   return false;
                 }
 
+                const value = result.data;
+
                 Swal.fire({
-                  icon: 'info',
-                  title: `Tradução do QR Code: ${result.data}`,
+                  title: `Resultado:`,
+                  text: value,
+                  cancelButtonText: 'Fechar',
+                  showCloseButton: true,
+                  showLoaderOnConfirm: true,
                 })
 
-                $('#modal-resultado').modal('show');
+                // $('#modal-resultado').modal('show');
               })
               .catch((error) => {
                 console.log(error, input.files[0]);
@@ -225,7 +230,7 @@ import QrScanner from './frameworks/qr-scanner.min.js'
         body.innerHTML += conteudos.conteudo_modal;
         body.innerHTML += conteudos.conteudo_modal_resultado;
 
-        $('#modal-resultado').modal('show');
+        // $('#modal-resultado').modal('show');
 
         clickGerar();
         verificarInputFile();
