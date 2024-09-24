@@ -1,66 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <meta name="keywords" content="QR; Code; API; Read">
-  <meta name="author" content="Gabriel Ribeiro">
-  <meta property="og:title" content="Ler QR Code">
-  <meta property="og:description" content="Leitor de códigos QR usando a API QR Server">
-  <meta property="og:url" content="https://gabriersdev.github.io/read-qr-code/">
-  <meta property="og:image" content="https://gabriersdev.github.io/read-qr-code/assets/img/thumb.png">
-  <meta property="og:image:secure_url" content="https://gabriersdev.github.io/read-qr-code/assets/img/thumb.png"> 
-  <meta property="og:image:type" content="image/png"> 
-  <meta property="og:image:width" content="400"> 
-  <meta property="og:image:height" content="300"> 
-  
-  <meta http-equiv="Content-Security-Policy" 
-  content="default-src 'self' 'unsafe-inline'; 
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="keywords" content="QR; Code; API; Read">
+    <meta name="author" content="Gabriel Ribeiro">
+    <meta property="og:title" content="Ler QR Code">
+    <meta property="og:description" content="Leitor de códigos QR usando a API QR Server">
+    <meta property="og:url" content="https://gabriersdev.github.io/read-qr-code/">
+    <meta property="og:image" content="https://gabriersdev.github.io/read-qr-code/assets/img/thumb.png">
+    <meta property="og:image:secure_url" content="https://gabriersdev.github.io/read-qr-code/assets/img/thumb.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="400">
+    <meta property="og:image:height" content="300">
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; 
   style-src 'self' 'unsafe-inline'; 
   style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  img-src 'self' 'unsafe-inline'; 
+  img-src data: blob: 'self' 'unsafe-inline'; 
+  child-src blob: data: 'self' 'unsafe-inline';
   font-src 'self' 'unsafe-inline' https://fonts.gstatic.com https://cdn.jsdelivr.net/; 
   script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/ https://code.jquery.com/ https://cdnjs.cloudflare.com/; 
   frame-src 'self' 'unsafe-inline';
-  connect-src 'self' 'unsafe-inline';">   
-  
-  <link rel="stylesheet" href="./assets/css/style.css">
-  <link rel="shortcut icon" href="./assets/img/favicon.svg" type="image/x-icon">
-  
-  <title>Ler QR Code</title>
-  
-  <script src="./assets/js/frameworks/jquery.js" defer></script>
-  <script src="./assets/js/frameworks/bootstrap.js" defer></script>
-  <script src="./assets/js/frameworks/pooper.js" defer></script>
-  <script src="./assets/js/frameworks/sweet-alert.js" defer></script>
-  <script type="module" src="./assets/js/script.js" defer></script>
-</head>
-<body>
-  
-  <noscript>
-    <div class="box-no-script">         
-      <div class="texto-pagina-centralizado-alt">
-        <h2 class="titulo-texto-pagina-centralizado">
-          Este site não funciona com o 
-          <span class="destaque-pagina-centralizado">Javascript desabilitado</span>
-        </h2>
-        <br>
-        <p class="label-texto-pagina-centralizado">Muitos dos recursos usados funcionam através do Javascript e sem ele a navegabilidade e o próprio funcionamento do site são comprometidos</p>
-        <p class="label-texto-pagina-centralizado">Portanto, habilite o Javascript e navegue pelo site</p><br>
-        <button data-recarrega-pagina class="btn-principal-no-script" id="btn-redirecionar-inicio" name="btn-redirecionar-inicio">Recarregar</button>
+  connect-src 'self' 'unsafe-inline';">
+
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="shortcut icon" href="./assets/img/favicon.svg" type="image/x-icon">
+
+    <title>Ler QR Code</title>
+
+    <script src="./assets/js/frameworks/jquery.js" defer></script>
+    <script src="./assets/js/frameworks/bootstrap.js" defer></script>
+    <script src="./assets/js/frameworks/pooper.js" defer></script>
+    <script src="./assets/js/frameworks/sweet-alert.js" defer></script>
+    <script type="module" src="./assets/js/script.js" defer></script>
+  </head>
+
+  <body>
+
+    <noscript>
+      <div class="box-no-script">
+        <div class="texto-pagina-centralizado-alt">
+          <h2 class="titulo-texto-pagina-centralizado">
+            Este site não funciona com o
+            <span class="destaque-pagina-centralizado">Javascript desabilitado</span>
+          </h2>
+          <br>
+          <p class="label-texto-pagina-centralizado">Muitos dos recursos usados funcionam através do Javascript e sem
+            ele a navegabilidade e o próprio funcionamento do site são comprometidos</p>
+          <p class="label-texto-pagina-centralizado">Portanto, habilite o Javascript e navegue pelo site</p><br>
+          <button data-recarrega-pagina class="btn-principal-no-script" id="btn-redirecionar-inicio"
+            name="btn-redirecionar-inicio">Recarregar</button>
+        </div>
       </div>
-    </div>
-  </noscript>
-  
-  <main class="container" data-conteudo="area-loading-conteudo">
-    <div class="alert alert-loading d-flex align-items-center justify-content-center" role="alert">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
+    </noscript>
+
+    <main class="container" data-conteudo="area-loading-conteudo">
+      <div class="alert alert-loading d-flex align-items-center justify-content-center" role="alert">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
-    </div>
-  </main>
-  
-</body>
+    </main>
+
+    <!-- TODO - Remove not used files -->
+
+  </body>
+
 </html>

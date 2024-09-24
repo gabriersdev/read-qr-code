@@ -1,3 +1,6 @@
+/* Import Font Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import url(./frameworks/bootstrap.css);
 @import url(./frameworks/bootstrap-icons.css);
 
@@ -9,15 +12,15 @@
 @import url(./elementos/no-script.css);
 @import url(./elementos/modal.css);
 
-html{
+html {
   scroll-behavior: smooth;
 }
 
-*{
+* {
   font-family: 'Inter', sans-serif;
 }
 
-body{
+body {
   background-color: var(--preto);
   height: 100vh;
   display: flex;
@@ -25,25 +28,25 @@ body{
   justify-content: center;
 }
 
-.none{
+.none {
   display: none;
 }
 
-.container{
+.container {
   margin-top: 5rem;
   margin-bottom: 5rem;
 }
 
-.alert-loading{
+.alert-loading {
   background-color: var(--branco-10);
   border: 1px solid var(--branco-10);
 }
 
-.card{
+.card {
   --bs-card-bg: var(--branco-50) !important;
 }
 
-.card-header{
+.card-header {
   background: var(--cinza);
   background: linear-gradient(90deg, #1E1E1E 0%, #232323 50%, #282828 100%);
   border-color: var(--branco-20) !important;
@@ -52,32 +55,32 @@ body{
   justify-content: space-between;
 }
 
-.btn{
+.btn {
   color: var(--branco-50);
   border-color: var(--branco-20);
 }
 
-.btn.disabled{
+.btn.disabled {
   color: initial;
   color: var(--branco) !important;
   padding-right: 0;
   font-size: 1.25rem;
 }
 
-.btn.dashed{
+.btn.dashed {
   border-style: dashed;
   border-right: unset;
 }
 
-.card-header .btn-compartilhar-app{
+.card-header .btn-compartilhar-app {
   padding-right: 0.8rem;
 }
 
-.input-group.trnsp button{
+.input-group.trnsp button {
   border-left: unset;
 }
 
-input{
+input {
   color: var(--branco) !important;
   border-color: var(--branco-20) !important;
 }
@@ -87,7 +90,7 @@ input{
 input:hover,
 input:focus,
 [data-action="acionar-qr-code-upload"]:hover,
-[data-action="acionar-qr-code-upload"]:focus{
+[data-action="acionar-qr-code-upload"]:focus {
   color: var(--branco) !important;
   border-color: var(--branco-30) !important;
   background-color: var(--branco-10) !important;
@@ -95,56 +98,59 @@ input:focus,
   box-shadow: none !important;
 }
 
-.card-body{
+.card-body {
   background-color: var(--preto);
 }
 
 .input-group-text,
-.form-control{
+.form-control {
   border-color: var(--branco-20) !important;
   color: var(--branco) !important;
 }
 
 .card-body .btn-ler-qr-code,
-.modal-body .btn-copiar-resultado{
+.modal-body .btn-copiar-resultado {
   margin-top: 1rem;
   width: 100%;
   color: var(--branco);
   background-color: var(--azul) !important;
-  border-color: var(--branco-20); 
+  border-color: var(--branco-20);
 }
 
 .card-body .btn-ler-qr-code:hover,
-.card-body .btn-ler-qr-code:focus{
+.card-body .btn-ler-qr-code:focus {
   background-color: var(--azul-escuro) !important;
 }
 
-.trnsp, .trnsp:focus, .trnsp:hover, .trnsp::placeholder{
+.trnsp,
+.trnsp:focus,
+.trnsp:hover,
+.trnsp::placeholder {
   background-color: transparent;
   color: var(--branco);
 }
 
-.icon.error{
+.icon.error {
   color: var(--vermelho-solido);
 }
 
-.link-visivel{
+.link-visivel {
   color: var(--azul);
   text-decoration: underline;
 }
 
-.custom-tooltip{
+.custom-tooltip {
   --bs-tooltip-bg: var(--cinza-claro) !important;
   --bs-tooltip-color: var(--branco) !important;
   --bs-tooltip-opacity: 1;
   --bs-tooltip-margin: 1rem;
 }
 
-[data-action="acionar-qr-code-upload"]{
+[data-action="acionar-qr-code-upload"] {
   border-radius: 0;
 }
 
-input[type=file]{
+input[type=file] {
   position: relative;
   top: 0;
   width: 0;
