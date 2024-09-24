@@ -1,6 +1,11 @@
 # Read QR Code
 
-Leitor de QR Codes usando a API QR Server e recursos de programação WEB.
+[api-qr-scanner-github]: https://github.com/nimiq/qr-scanner/
+[link-demo]: https://gabriersdev.github.io/read-qr-code/
+
+Leitor de QR Codes usando a [API QR Scanner][api-qr-scanner-github] e recursos de programação WEB.  
+
+Veja a [demonstração do projeto clicando aqui][link-demo]
 
 ## Funções
 
@@ -14,7 +19,7 @@ Leitor de QR Codes usando a API QR Server e recursos de programação WEB.
 
 - Bootstrap
 - Bootstrap Icons
-- API QR Server
+- [API QR Scanner][api-qr-scanner-github]
 - jQuery
 - SweetAlert
 - HTML
